@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E.K. Rowan - Dating Profile Writer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            background: linear-gradient(135deg, #0a0a14 0%, #1a0f2e 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(179, 103, 247, 0.2);
+        }
+
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #b367f7;
+            letter-spacing: 2px;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            text-align: center;
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(179, 103, 247, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #b367f7, #e879f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, #b367f7, #e879f9);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px rgba(184, 103, 247, 0.4);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(184, 103, 247, 0.6);
+        }
+
+        /* About Section */
+        .about {
+            padding: 4rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            margin-bottom: 6rem;
+        }
+
+        .about h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #b367f7;
+        }
+
+        .about p {
+            font-size: 1.05rem;
+            color: #c0c0c0;
+            margin-bottom: 1.5rem;
+            line-height: 1.9;
+        }
+
+        /* Portfolio Section */
+        .portfolio {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #b367f7;
+            font-weight: 700;
+        }
+
+        /* Before/After Card */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(179, 103, 247, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            border-color: rgba(184, 103, 247, 0.6);
+            box-shadow: 0 20px 60px rgba(179, 103, 247, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(179, 103, 247, 0.1), rgba(124, 58, 237, 0.1));
+            border-bottom: 1px solid rgba(179, 103, 247, 0.2);
+        }
+
+        .card-header h3 {
+            color: #b367f7;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .card-header p {
+            color: #909090;
+            font-size: 0.95rem;
+        }
+
+        .card-content {
+            padding: 2rem;
+        }
+
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .before-after {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .profile-section {
+            padding: 1.5rem;
+            border-radius: 10px;
+            transition: all 0.4s ease;
+        }
+
+        .before {
+            background: rgba(100, 100, 100, 0.2);
+            border: 1px solid rgba(150, 150, 150, 0.3);
+        }
+
+        .after {
+            background: rgba(179, 103, 247, 0.1);
+            border: 1px solid rgba(184, 103, 247, 0.5);
+        }
+
+        .profile-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .before .profile-label {
+            color: #909090;
+        }
+
+        .after .profile-label {
+            color: #b367f7;
+        }
+
+        .profile-text {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: #d0d0d0;
+            margin-bottom: 1rem;
+        }
+
+        .why-works {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            border-left: 3px solid #b367f7;
+        }
+
+        .why-works h4 {
+            color: #b367f7;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .why-works ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .why-works li {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            margin-bottom: 0.7rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .why-works li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #b367f7;
+            font-weight: bold;
+        }
+
+        /* Tips Section */
+        .tips {
+            padding: 4rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            margin-bottom: 4rem;
+        }
+
+        .tips h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            color: #b367f7;
+        }
+
+        .tip-item {
+            margin-bottom: 2.5rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+        }
+
+        .tip-item:last-child {
+            border-bottom: none;
+        }
+
+        .tip-number {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #b367f7;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .tip-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .tip-example {
+            margin: 1.2rem 0;
+            padding: 1.2rem;
+            background: rgba(100, 100, 100, 0.15);
+            border-radius: 8px;
+            border-left: 3px solid #ff6b6b;
+        }
+
+        .tip-example.bad {
+            border-left-color: #ff6b6b;
+        }
+
+        .tip-example.good {
+            border-left-color: #c084fc;
+        }
+
+        .tip-example-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .tip-example.bad .tip-example-label {
+            color: #ff6b6b;
+        }
+
+        .tip-example.good .tip-example-label {
+            color: #c084fc;
+        }
+
+        .tip-example-text {
+            font-style: italic;
+            color: #c0c0c0;
+        }
+
+        .tip-why {
+            color: #a0a0a0;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(179, 103, 247, 0.2);
+            margin-top: 6rem;
+        }
+
+        footer p {
+            color: #808080;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-cta {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, #b367f7, #e879f9);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .footer-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(184, 103, 247, 0.4);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+            }
+            50% {
+                box-shadow: 0 10px 40px rgba(0, 217, 255, 0.5);
+            }
+        }
+
+        .pulse {
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                margin-top: 60px;
+                padding: 2rem 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .portfolio,
+            .about,
+            .tips {
+                padding: 2.5rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">E.K. Rowan</div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Your Profile Deserves Better</h1>
+            <p>Generic profiles get generic matches. I'll help the right person notice who you've been all along.</p>
+            <a href="https://www.fiverr.com/ek_rowan/rewrite_your_dating_profile_to_get_real_matches" target="_blank" class="cta-button pulse">Get Your Profile Rewritten</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about fade-in">
+        <h2>Why This Works</h2>
+        <p>I didn't meet my wife through an app. But I've spent nearly a decade in banking learning how to communicate what matters, and my wife is a psychiatrist who studies attachment and relationships.</p>
+        <p>That combination—real-world relationship experience, professional communication expertise, and genuine understanding of modern dating—is what I bring to your profile.</p>
+        <p><strong>The goal isn't to turn you into someone you're not. It's to help the right person notice who you've been all along.</strong></p>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section class="portfolio">
+        <h2 class="section-title">See the Transformation</h2>
+
+        <!-- Card 1: Male Engineer -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <h3>28-Year-Old Software Engineer</h3>
+                <p>From forgettable → Compelling and memorable</p>
+            </div>
+            <div class="card-content">
+                <div class="before-after">
+                    <div class="profile-section before">
+                        <div class="profile-label">❌ Before</div>
+                        <div class="profile-text">
+                            I'm a software engineer who likes coding and hanging out. I enjoy hiking and beer. Not looking for anything too serious right now. I'm into tech and video games. Hit me up if you're interested.
+                        </div>
+                    </div>
+                    <div class="profile-section after">
+                        <div class="profile-label">✓ After</div>
+                        <div class="profile-text">
+                            I spend my days solving problems that don't exist yet—literally my job as a software engineer. Nights, I'm either hiking a new trail trying to clear my head or diving into a new video game world. Coffee's on me if you can beat me at recommending a hidden gem restaurant.<br><br>
+                            What I'm actually looking for: Someone who laughs at their own jokes, has opinions about things (even if we disagree), and doesn't mind that I'll occasionally abandon plans to finish a hike I started.
+                        </div>
+                    </div>
+                </div>
+                <div class="why-works">
+                    <h4>Why This Works</h4>
+                    <ul>
+                        <li>Shows personality through specific details</li>
+                        <li>Reveals what he actually values</li>
+                        <li>Uses conversational tone—sounds like a real person</li>
+                        <li>Creates curiosity and connection</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Female Marketing Manager -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <h3>26-Year-Old Marketing Manager</h3>
+                <p>From surface-level → Distinctive and genuine</p>
+            </div>
+            <div class="card-content">
+                <div class="before-after">
+                    <div class="profile-section before">
+                        <div class="profile-label">❌ Before</div>
+                        <div class="profile-text">
+                            Hi, I'm a marketing manager at a tech company. I love travel, wine, and my dog. I enjoy working out and trying new restaurants. I'm looking for someone who's ambitious and kind. Message me!
+                        </div>
+                    </div>
+                    <div class="profile-section after">
+                        <div class="profile-label">✓ After</div>
+                        <div class="profile-text">
+                            I'm the person who gets weirdly passionate about campaign strategy at dinner parties (yes, I know it's annoying). By day, I wrangle creative teams and impossible deadlines. By weekend, I'm dragging my rescue dog places or convincing friends to join my latest wine region adventure.<br><br>
+                            Looking for someone who gets that ambition isn't a phase—it's how I'm wired. Someone who can appreciate both a really good Burgundy and a chaotic night that ends up somewhere completely unplanned.
+                        </div>
+                    </div>
+                </div>
+                <div class="why-works">
+                    <h4>Why This Works</h4>
+                    <ul>
+                        <li>Reveals both professional and vulnerable side</li>
+                        <li>Uses humor to make herself memorable</li>
+                        <li>Shows self-awareness without apologizing</li>
+                        <li>Sets expectations early</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Divorced Dad -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <h3>42-Year-Old Divorced Dad</h3>
+                <p>From deflated → Confident and real</p>
+            </div>
+            <div class="card-content">
+                <div class="before-after">
+                    <div class="profile-section before">
+                        <div class="profile-label">❌ Before</div>
+                        <div class="profile-text">
+                            Divorced dad of two. Work in sales. Like sports and movies. Just seeing what's out there. Not sure what I'm doing on here. I have my kids half the time so that's a big part of my life. Looking for someone understanding.
+                        </div>
+                    </div>
+                    <div class="profile-section after">
+                        <div class="profile-label">✓ After</div>
+                        <div class="profile-text">
+                            After 15 years of married life, I'm figuring out who I am when I'm not someone's husband. Turns out I'm someone who loves coaching my kids' basketball team, gets competitive about fantasy football, and has way too many opinions about sports movies.<br><br>
+                            I'm not pretending to have it all figured out. But I'm more present, I laugh easier, and I'm genuinely interested in getting to know someone instead of just going through the motions.
+                        </div>
+                    </div>
+                </div>
+                <div class="why-works">
+                    <h4>Why This Works</h4>
+                    <ul>
+                        <li>Leads with vulnerability and growth</li>
+                        <li>Makes parenthood sound like a strength</li>
+                        <li>Shows honest learning curve, not desperation</li>
+                        <li>Creates real emotional connection</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tips Section -->
+    <section class="tips">
+        <h2>5 Things That Ruin a Dating Profile</h2>
+
+        <div class="tip-item">
+            <div class="tip-number">1. Being Vague Instead of Specific</div>
+            <div class="tip-title">Generic = Forgettable</div>
+            <div class="tip-example bad">
+                <div class="tip-example-label">❌ Ruins It</div>
+                <div class="tip-example-text">"I love traveling, good food, and spending time with friends."</div>
+            </div>
+            <div class="tip-example good">
+                <div class="tip-example-label">✓ Fixes It</div>
+                <div class="tip-example-text">"I've been to 12 countries. My favorite: hiking in Peru. I'm obsessed with hole-in-the-wall Thai restaurants, and my friends tease me for organizing group trips constantly."</div>
+            </div>
+            <div class="tip-why"><strong>Why:</strong> Specific details make YOU memorable. When someone reads your profile, they should imagine an actual date with you.</div>
+        </div>
+
+        <div class="tip-item">
+            <div class="tip-number">2. Putting Down What You're NOT Instead of What You ARE</div>
+            <div class="tip-title">Negatives = Red Flag</div>
+            <div class="tip-example bad">
+                <div class="tip-example-label">❌ Ruins It</div>
+                <div class="tip-example-text">"No drama. Not looking for games. No toxic people. Must be genuine."</div>
+            </div>
+            <div class="tip-example good">
+                <div class="tip-example-label">✓ Fixes It</div>
+                <div class="tip-example-text">"I value directness over subtlety. I actually enjoy deep conversations where we disagree. Honesty is hotter than politeness."</div>
+            </div>
+            <div class="tip-why"><strong>Why:</strong> Listing what you don't want sounds defensive and exhausted. The right person will recognize themselves in your values.</div>
+        </div>
+
+        <div class="tip-item">
+            <div class="tip-number">3. Trying to Be Funny When You're Not</div>
+            <div class="tip-title">Forced Humor = Insecurity</div>
+            <div class="tip-example bad">
+                <div class="tip-example-label">❌ Ruins It</div>
+                <div class="tip-example-text">"Here for a good time, not a long time LOL. Let's grab pizza."</div>
+            </div>
+            <div class="tip-example good">
+                <div class="tip-example-label">✓ Fixes It</div>
+                <div class="tip-example-text">If you're naturally funny, show it through real stories. If you're not, don't force it. Authenticity is more attractive.</div>
+            </div>
+            <div class="tip-why"><strong>Why:</strong> Trying to be someone you're not repels your actual match. Let your real personality shine.</div>
+        </div>
+
+        <div class="tip-item">
+            <div class="tip-number">4. Leading With What You WANT Instead of What You BRING</div>
+            <div class="tip-title">Requirements List = Turn Off</div>
+            <div class="tip-example bad">
+                <div class="tip-example-label">❌ Ruins It</div>
+                <div class="tip-example-text">"Looking for someone ambitious, fit, who can keep up with me. Must have these qualities."</div>
+            </div>
+            <div class="tip-example good">
+                <div class="tip-example-label">✓ Fixes It</div>
+                <div class="tip-example-text">"I'm ambitious, fit, and always up for the next challenge. Looking for someone with their own drive."</div>
+            </div>
+            <div class="tip-why"><strong>Why:</strong> People are attracted to people excited about their own lives, not people listing requirements like a menu.</div>
+        </div>
+
+        <div class="tip-item">
+            <div class="tip-number">5. Hiding Behind Filtered Photos</div>
+            <div class="tip-title">Filters = Broken Promises</div>
+            <div class="tip-example bad">
+                <div class="tip-example-label">❌ Ruins It</div>
+                <div class="tip-example-text">All filtered photos. Professional headshots. Photos without showing your actual face.</div>
+            </div>
+            <div class="tip-example good">
+                <div class="tip-example-label">✓ Fixes It</div>
+                <div class="tip-example-text">At least one clear, natural photo where someone can see the real you. Bonus if one shows you doing something you love.</div>
+            </div>
+            <div class="tip-why"><strong>Why:</strong> A filtered photo promises someone will be disappointed. Real photos set expectations and attract genuine matches.</div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>The Rule That Beats All Others:</strong></p>
+        <p>Your profile works when it makes the RIGHT person think, "This is exactly who I'm looking for."</p>
+        <p style="margin-top: 2rem; font-size: 0.95rem; color: #909090;">Write for your person. Not for the algorithm. Not for everyone.</p>
+        <a href="https://www.fiverr.com/ek_rowan/rewrite_your_dating_profile_to_get_real_matches" target="_blank" class="footer-cta">Book Your Profile Rewrite on Fiverr</a>
+        <p style="margin-top: 2rem; font-size: 0.85rem; color: #606060;">© 2026 E.K. Rowan. Modern dating profiles, authentic stories.</p>
+    </footer>
+
+    <script>
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card, .about, .tips').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
